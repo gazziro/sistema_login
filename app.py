@@ -23,7 +23,7 @@ def fonts(filename):
 	return static_file(filename, root='static/fonts')
 
 
-@route('/Login')  #@get('/login')
+@route('/')  #@get('/')
 def Login():
     return template('Login')
 
@@ -33,7 +33,8 @@ def check_login(username, password):
         return True
     return False
 
-@route("/Login", method="POST")
+
+@route("/", method="POST")
 def acao_login():
     username = request.forms.get('username')
     password = request.forms.get('password')
@@ -44,4 +45,7 @@ def error404(error):
     return template('pagina404')
 
 if __name__ =='__main__':
-    run(host='localhost', port=8080, debug=False)
+    if os.environ.get("APP_LOCATION") == "heroku":
+        run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    else:    
+        run(host='localhost', port=8080, debug=False)
