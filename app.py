@@ -1,7 +1,8 @@
 from cgitb import html
 from bottle import route, run, request, template, TEMPLATE_PATH, static_file, get, error
 import os
- 
+from model import insert_user
+
 TEMPLATE_PATH.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "views")))
 
 
@@ -22,6 +23,16 @@ def images(filename):
 def fonts(filename):
 	return static_file(filename, root='static/fonts')
 
+@route('/cadastro')
+def cadastro():
+    return template('cadastro')
+
+@route('/cadastro', method="POST")
+def acao_cadastro():
+    username = request.forms.get('username')
+    password = request.forms.get('password')
+    insert_user(username, password)
+    return template('verificacao_cadastro', nome=username)
 
 @route('/')  #@get('/')
 def Login():
